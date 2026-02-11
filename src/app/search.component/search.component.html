@@ -1,0 +1,5 @@
+<h2>Employee Search</h2>
+<label>Employee ID</label>
+<input type="number" [(ngModel)]="employeeId" placeholder="e.g., 101" />
+<button (click)="go()">Search</button>
+<p *ngIf="error" style="color:red">{{ error }}</p>

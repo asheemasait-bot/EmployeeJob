@@ -1,0 +1,40 @@
+<h2>Employee Details</h2>
+
+<div *ngIf="(loading$ | async)">Loading...</div>
+<p *ngIf="(error$ | async) as err" style="color:red">{{ err }}</p>
+
+<ng-container *ngIf="(data$ | async) as data">
+  <ng-container *ngIf="data?.employee as e">
+    <h3>{{ e.employeeName }} (ID: {{ e.employeeId }})</h3>
+
+    <p><b>Manager:</b> {{ (e.managerName || '').trim() ? e.managerName : 'N/A' }} ({{ e.managerId ?? '—' }})</p>
+    <p><b>Department ID:</b> {{ e.departmentId ?? 'N/A' }}</p>
+
+    <h3>Job History</h3>
+
+    <table border="1" cellpadding="6" cellspacing="0" *ngIf="data.jobHistory.length > 0; else noJobs">
+      <thead>
+        <tr>
+          <th>Start</th>
+          <th>End</th>
+          <th>Job ID</th>
+          <th>Job Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let j of data.jobHistory">
+          <td>{{ j.startDate | date:'mediumDate' }}</td>
+          <td>{{ j.endDate ? (j.endDate | date:'mediumDate') : 'Present' }}</td>
+          <td>{{ j.jobId }}</td>
+          <td>{{ j.jobTitle ?? '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noJobs>
+      <p>No job history found.</p>
+    </ng-template>
+  </ng-container>
+</ng-container>
+
+
