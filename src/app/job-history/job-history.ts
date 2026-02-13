@@ -1,44 +1,43 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { EmployeeJobHistoryResponse } from '../Services/employee-api.service';
-import * as EmployeeActions from '../../store/employee.actions';
 import { selectEmployeeLoading, selectEmployeeError, selectEmployeeData } from '../../store/employee.selectors';
+import * as EmployeeActions from '../../store/employee.actions';
 
 @Component({
-  selector: 'app-search.component',
+  selector: 'app-job-history',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './search.component.html',
-  styleUrl: './search.component.css',
+  imports: [CommonModule, DatePipe],
+  templateUrl: './job-history.html',
 })
-export class SearchComponent {
+export class JobHistoryComponent implements OnInit {
   private store = inject(Store);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
-
-  employeeId: number | null = null;
 
   loading$: Observable<boolean> = this.store.select(selectEmployeeLoading);
   error$: Observable<string> = this.store.select(selectEmployeeError);
   data$: Observable<EmployeeJobHistoryResponse | null> = this.store.select(selectEmployeeData);
 
-  search() {
+  private employeeId = 0;
+
+  ngOnInit(): void {
+    this.employeeId = Number(this.route.snapshot.paramMap.get('id'));
+
     if (!this.employeeId || this.employeeId <= 0) {
-      this.store.dispatch(
-        EmployeeActions.loadEmployeeJobHistoryFailure({ error: 'Please enter a valid Employee ID.' })
-      );
+      this.router.navigate(['/']);
       return;
     }
 
     this.store.dispatch(EmployeeActions.loadEmployeeJobHistory({ employeeId: this.employeeId }));
   }
 
-  goHistory(empId: number) {
-    this.router.navigate(['/employee', empId, 'history']);
+  back() {
+    this.router.navigate(['/']);
   }
 }
 

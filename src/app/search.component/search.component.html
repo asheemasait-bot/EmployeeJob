@@ -1,5 +1,21 @@
 <h2>Employee Search</h2>
+
 <label>Employee ID</label>
 <input type="number" [(ngModel)]="employeeId" placeholder="e.g., 101" />
-<button (click)="go()">Search</button>
-<p *ngIf="error" style="color:red">{{ error }}</p>
+<button (click)="search()">Search</button>
+
+<div *ngIf="(loading$ | async)">Loading...</div>
+<p *ngIf="(error$ | async) as err" style="color:red">{{ err }}</p>
+
+<!-- Employee details on HOME -->
+<ng-container *ngIf="(data$ | async) as data">
+  <ng-container *ngIf="data?.employee as e">
+    <hr />
+    <h3>{{ e.employeeName }} (ID: {{ e.employeeId }})</h3>
+    <p><b>Manager:</b> {{ (e.managerName || '').trim() ? e.managerName : 'N/A' }} ({{ e.managerId ?? '—' }})</p>
+    <p><b>Department ID:</b> {{ e.departmentId ?? 'N/A' }}</p>
+
+    <button (click)="goHistory(e.employeeId)">History</button>
+  </ng-container>
+</ng-container>
+

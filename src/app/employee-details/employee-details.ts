@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { CommonModule} from '@angular/common';
+import { ActivatedRoute,RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -12,7 +12,7 @@ import * as EmployeeActions from '../../store/employee.actions';
 @Component({
   selector: 'app-employee-details',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, RouterLink],
   templateUrl: './employee-details.html',
 })
 export class EmployeeDetailsComponent implements OnInit {
